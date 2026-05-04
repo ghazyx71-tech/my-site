@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRAGON BOT | 𝟒.𝟐</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-pure-black: #000000;
+            --card-bg: #080808;
+            --accent-red: #bb0000;
+            --gold: #D4AF37;
+            --neon-green: #00ff88;
+            --white: #ffffff;
+            --text-dim: #b0b0b0;
+            --blue-glow: #007bff;
+            --note-gold: #c9a03d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-pure-black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .content-wrapper { position: relative; z-index: 2; }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero h1 { font-size: clamp(2rem, 8vw, 3.8rem); color: var(--white); margin-bottom: 15px; }
+        .hero p { color: var(--text-dim); max-width: 700px; margin-bottom: 30px; font-size: 1.15rem; }
+        .btn-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 12px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+        }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-gold:hover { background: #c49b0c; transform: scale(1.02); }
+        .btn-red { background: var(--accent-red); color: #fff; }
+        .btn-red:hover { background: #990000; transform: scale(1.02); }
+        .btn-outline { border: 2px solid var(--gold); color: var(--gold); background: transparent; }
+        .btn-outline:hover { background: var(--gold); color: #000; }
+        section { padding: 80px 8%; }
+        .section-title { text-align: center; font-size: 2.2rem; color: var(--gold); margin-bottom: 50px; border-bottom: 2px solid rgba(212,175,55,0.3); display: inline-block; width: auto; margin-left: auto; margin-right: auto; padding-bottom: 10px; }
+        .guide-box {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #1a1a1a;
+            margin-bottom: 30px;
+        }
+        .code-item { margin-bottom: 25px; position: relative; }
+        .code-box {
+            background: #000;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            color: var(--neon-green);
+            font-family: monospace;
+            text-align: left;
+            direction: ltr;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .code-box:hover { border-color: var(--neon-green); background: #0a0a0a; }
+        .note { 
+            color: #888; 
+            font-size: 0.85rem; 
+            margin-top: 8px; 
+            display: block; 
+            border-right: 3px solid var(--accent-red); 
+            padding-right: 12px; 
+        }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item {
+            background: #0a0a0a;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 18px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: var(--gold);
+            transition: 0.3s;
+            font-size: 1.05rem;
+        }
+        .faq-question:hover { background: #111; }
+        .faq-answer {
+            padding: 0 25px 20px;
+            color: var(--text-dim);
+            display: none;
+            font-size: 0.95rem;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 18px;
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 70px 5%;
+        }
+        .modal-content { max-width: 1100px; margin: 0 auto; position: relative; }
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 2.5rem;
+            color: var(--gold);
+            cursor: pointer;
+            z-index: 2001;
+            background: none;
+            border: none;
+            font-weight: bold;
+        }
+        .close-btn:hover { color: #ff4444; }
+        #toast-msg {
+            visibility: hidden; min-width: 220px; background: var(--neon-green); color: #000;
+            text-align: center; border-radius: 50px; padding: 14px 20px; position: fixed;
+            z-index: 3000; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold;
+        }
+        #toast-msg.show { visibility: visible; animation: fadein 0.4s, fadeout 0.4s 2.6s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        footer { text-align: center; padding: 50px; border-top: 1px solid #111; margin-top: 20px; }
+        .note-section {
+            background: var(--card-bg);
+            border: 1px solid #1a1a1a;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+        }
+        .note-title {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 12px;
+        }
+        .alert-box {
+            background: rgba(187, 0, 0, 0.12);
+            border: 1px solid var(--accent-red);
+            padding: 22px;
+            border-radius: 14px;
+            margin: 25px 0;
+        }
+        .code-inline {
+            background: #1a1a1a;
+            color: var(--gold);
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        .step-list { list-style: none; }
+        .step-list li { margin-bottom: 15px; position: relative; padding-right: 30px; }
+        .step-list li::before { content: "⚡"; position: absolute; right: 0; top: 0; color: var(--gold); }
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 25px; }
+        .comp-box { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #2a2a2a; }
+        .future-plan { border-right: 4px solid var(--blue-glow); padding-right: 20px; background: rgba(0, 123, 255, 0.05); }
+        .commands-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+        .command-card {
+            background: var(--card-bg);
+            border: 1px solid #1a1a1a;
+            padding: 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .command-card:hover { border-color: var(--neon-green); transform: translateY(-4px); background: #0a0a0a; }
+        .command-card strong { display: block; color: var(--neon-green); font-family: monospace; font-size: 1.25rem; margin-bottom: 10px; }
+        .command-card span { color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
+        .command-card span .note-text { color: var(--note-gold); }
+        .category-title { font-size: 2rem; color: var(--gold); border-right: 5px solid var(--accent-red); padding-right: 20px; margin: 50px 0 30px; }
+        .category-title:first-of-type { margin-top: 0; }
+        .points-note {
+            background: rgba(0, 0, 0, 0.5);
+            border-right: 3px solid var(--note-gold);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .points-note p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+        .points-note strong {
+            color: var(--note-gold);
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="content-wrapper">
+        <nav>
+            <div class="logo">🐉 𝐃𝐑𝐀𝐆𝐎𝐍 𝐁𝐎𝐓 𝟒.𝟐</div>
+            <button class="btn btn-gold" style="padding: 8px 20px; font-size: 0.85rem;" onclick="toggleModal('notesModal')">📝 ملاحظات المطور</button>
+        </nav>
+        <header class="hero">
+            <h1>𝐃𝐑𝐀𝐆𝐎𝐍 𝐁𝐎𝐓 | 𝟒.𝟐</h1>
+            <p>🚀 الموقع الرسمي لتفعيل وبرمجة أقوى سكريبتات الواتساب. النسخة المطورة بواسطة 𝐆𝐇𝐀𝐙𝐈</p>
+            <div class="btn-container">
+                <button class="btn btn-gold" onclick="toggleModal('commandsModal')">📜 قائمة الأوامر (81)</button>
+                <a href="https://t.me/d_r_a_g_h/20" class="btn btn-red">🤖 رابط البوت</a>
+                <a href="https://www.mediafire.com/file/e53vlsoj3c24an2/Termux-t.apk/file" class="btn btn-outline">📦 تحميل Termux</a>
+            </div>
+        </header>
+        <section id="installation">
+            <h2 class="section-title">⚙️ أوامر التثبيت (اضغط للنسخ)</h2>
+            <div class="guide-box">
+                <div class="code-item"><div class="code-box" onclick="doCopy('pkg update && pkg upgrade -y')">pkg update && pkg upgrade -y</div><span class="note">📌 اكتب y واضغط Enter عند التوقف</span></div>
+                <div class="code-item"><div class="code-box" onclick="doCopy('termux-setup-storage')">termux-setup-storage</div><span class="note">📌 وافق على صلاحية الوصول للملفات</span></div>
+                <div class="code-item"><div class="code-box" onclick="doCopy('pkg install nodejs yarn mpv -y')">pkg install nodejs yarn mpv -y</div></div>
+                <div class="code-item"><div class="code-box" onclick="doCopy('cd /sdcard/.bot/bot')">cd /sdcard/.bot/bot</div></div>
+                <div class="code-item"><div class="code-box" onclick="doCopy('rm -rf ملف_الاتصال')">rm -rf ملف_الاتصال</div></div>
+                <div class="code-item"><div class="code-box" onclick="doCopy('node index')">node index</div><span class="note">⚠️ مهم: اكتب الرقم الذي تريد تفعيل البوت عليه عند الطلب</span></div>
+            </div>
+        </section>
+        <section id="faq">
+            <h2 class="section-title">❓ الأسئلة الشائعة</h2>
+            <div class="faq-container">
+                <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)">لماذا لا يعمل أمر التثبيت الأول؟ <span>➕</span></div><div class="faq-answer">تأكد من تحميل Termux من F-Droid وليس متجر Play، وتأكد من اتصال الإنترنت.</div></div>
+                <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)">كيف أربط البوت بالواتساب؟ <span>➕</span></div><div class="faq-answer">بعد تشغيل "node index"، أدخل رقمك بالصيغة الدولية (مثال: 9665xxxxxx)، ثم أدخل الكود في واتساب ← الأجهزة المرتبطة.</div></div>
+                <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)">هل البوت آمن من الحظر؟ <span>➕</span></div><div class="faq-answer">نسبة حماية عالية لكن لا تبالغ في الإرسال السريع (لا ترسل 500 رسالة في الدقيقة).</div></div>
+                <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)">كيف أحدث البوت؟ <span>➕</span></div><div class="faq-answer">احذف المجلد القديم (rm -rf .bot) وأعد تحميل السكريبت الجديد من القناة الرسمية.</div></div>
+            </div>
+        </section>
+        <footer>
+            <div class="btn-container" style="margin-bottom: 25px;">
+                <a href="https://t.me/d_r_a_g_h" class="btn btn-red">📢 قناة التليجرام</a>
+                <a href="https://t.me/d_r_a_g_h/24" class="btn btn-gold">🛠️ تحميل MT Manager</a>
+            </div>
+            <p>© 2026 𝐃𝐑𝐀𝐆𝐎𝐍 𝐁𝐎𝐓 - جميع الحقوق محفوظة لـ 𝐆𝐇𝐀𝐙𝐈</p>
+        </footer>
+    </div>
+
+<!-- ========== قائمة الأوامر الكاملة ========== -->
+<div id="commandsModal" class="modal">
+    <button class="close-btn" onclick="closeModal('commandsModal')">✖</button>
+    <div class="modal-content">
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 20px;">🐉 قائمة الأوامر (81 أمر)</h2>
+
+        <!-- فئة: أدوات -->
+        <h3 class="category-title">🛠️ أدوات</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.اقبلهم')"><strong>اقبلهم</strong><span> قبول جميع الطلبات في الجروب.</span></div>
+            <div class="command-card" onclick="doCopy('.اوامر')"><strong>اوامر</strong><span> عرض اوامر البوت المتوفرة.</span></div>
+            <div class="command-card" onclick="doCopy('.تست')"><strong>تست</strong><span> اختبار بسيط لسرعة البوت.</span></div>
+            <div class="command-card" onclick="doCopy('..')"><strong>..</strong><span> تهيئة البوت في تيرمكس لتنفيذ أمر واحد <span class="note-text">(مفيد للزرف)</span></span></div>
+            <div class="command-card" onclick="doCopy('.تصويت')"><strong>تصويت</strong><span> انشاء تصويت في الجروب مع خيارات.</span></div>
+            <div class="command-card" onclick="doCopy('.جيب')"><strong>جيب</strong><span> اخذ صورة الواسطة المرسولة وارسالها للخاص وفي مجلد nova/data/downloads.</span></div>
+            <div class="command-card" onclick="doCopy('.حالة')"><strong>حالة</strong><span> عرض حالة البوت وسرعته.</span></div>
+            <div class="command-card" onclick="doCopy('.حذف')"><strong>حذف</strong><span> حذف رسالة مرسولة بالجروب مع رسالة حذف.</span></div>
+            <div class="command-card" onclick="doCopy('.سكربت')"><strong>سكربت</strong><span> انشاء ملف البوت بدون ملف المكاتب ومحفوظ بكلمة سر.</span></div>
+            <div class="command-card" onclick="doCopy('.ضيفه')"><strong>ضيفه</strong><span> اضافة عضو الى المجموعة عبر رقم هاتفه.</span></div>
+            <div class="command-card" onclick="doCopy('.عدد')"><strong>عدد</strong><span> عرض عدد الزرف.</span></div>
+            <div class="command-card" onclick="doCopy('.فحص')"><strong>فحص</strong><span> فحص الرقم اذا كان مفعل في واتساب مع صورة او بدون او غير مفعل.</span></div>
+            <div class="command-card" onclick="doCopy('.كشف')"><strong>كشف</strong><span> كشف البوتات في الجروب.</span></div>
+            <div class="command-card" onclick="doCopy('.مؤقت')"><strong>مؤقت</strong><span> بدأ مؤقت في الجروب.</span></div>
+            <div class="command-card" onclick="doCopy('.مزروفين')"><strong>مزروفين</strong><span> عرض الأعضاء المزروفين في الجروب.</span></div>
+            <div class="command-card" onclick="doCopy('.معلوماته')"><strong>معلوماته</strong><span> عرض معلومات الشخص.</span></div>
+            <div class="command-card" onclick="doCopy('.منع')"><strong>منع</strong><span> يمنع الشتم والروابط والمنشن الخفي مع انذارات <span class="note-text">(يمكنك حذف الانذارات عبر .منع حذف)</span></span></div>
+            <div class="command-card" onclick="doCopy('.نسخة')"><strong>نسخة</strong><span> نسخ تفاصيل المجموعة <span class="note-text">(اسم، صورة، وصف)</span></span></div>
+            <div class="command-card" onclick="doCopy('.نظف')"><strong>نظف</strong><span> تنظيف البوت من ملفات .bak.</span></div>
+            <div class="command-card" onclick="doCopy('.وجهه')"><strong>وجهه</strong><span> توجيه رسالة بعدد مرات محددة.</span></div>
+        </div>
+
+        <!-- فئة: ألعاب -->
+        <h3 class="category-title">🎮 ألعاب</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.اخر_حرف'); addPoints('اخر حرف')"><strong>اخر حرف</strong><span> عليك كتابة اخر حرف من الكلمة.</span></div>
+            <div class="command-card" onclick="doCopy('.اكس'); addPoints('اكس او')"><strong>اكس</strong><span> اكس او.</span></div>
+            <div class="command-card" onclick="doCopy('.الغام'); addPoints('الغام')"><strong>الغام</strong><span> تلعب بنظام 1v1 او ضد بوت <span class="note-text">(يوجد 20 مربع ويوجد 5 الغام عليك عدم اختيار مربع يوجد به لغم، الذي يخسر 3 قلوب هو الخاسر)</span></span></div>
+            <div class="command-card" onclick="doCopy('.القاتل'); addPoints('القاتل')"><strong>القاتل</strong><span> يوجد قضية قتل عليك حلها وكشف من القاتل.</span></div>
+            <div class="command-card" onclick="doCopy('.اول_حرف'); addPoints('اول حرف')"><strong>اول حرف</strong><span> عليك كتابة اول حرف من الكلمة.</span></div>
+            <div class="command-card" onclick="doCopy('.تسلسل'); addPoints('تسلسل')"><strong>تسلسل</strong><span> عليك كتابة التسلسل المكتوب للايموجيات.</span></div>
+            <div class="command-card" onclick="doCopy('.حجرة'); addPoints('حجرة ورقة مقص')"><strong>حجرة</strong><span> حجرة، ورقة، مقص.</span></div>
+            <div class="command-card" onclick="doCopy('.حساب'); addPoints('حساب')"><strong>حساب</strong><span> عليك حل معادلة رياضيات.</span></div>
+            <div class="command-card" onclick="doCopy('.رتب'); addPoints('رتب')"><strong>رتب</strong><span> عليك ترتيب الاحرف بشكل صحيح.</span></div>
+            <div class="command-card" onclick="doCopy('.غزو'); addPoints('غزو')"><strong>غزو</strong><span> عليك كتابة التردد الرقمي المرسل قبل نفاذ الوقت.</span></div>
+            <div class="command-card" onclick="doCopy('.فعاليات'); addPoints('فعاليات')"><strong>فعاليات</strong><span> بدء عدة فعاليات مرة واحدة <span class="note-text">(كتابة، اول حرف، اخر حرف، تفكيك، ترتيب)</span></span></div>
+            <div class="command-card" onclick="doCopy('.فكك'); addPoints('فكك')"><strong>فكك</strong><span> تفكيك الكلمة للاحرف.</span></div>
+            <div class="command-card" onclick="doCopy('.قنبلة'); addPoints('قنبلة')"><strong>قنبلة</strong><span> يوجد مع شخص قنبلة يجب تمريرها قبل نفاذ الوقت لشخص اخر <span class="note-text">(يمكنك تمريرها عن طريق منشن الشخص)</span></span></div>
+            <div class="command-card" onclick="doCopy('.كتابة'); addPoints('كتابة')"><strong>كتابة</strong><span> عليك كتابة الكلمة المرسلة.</span></div>
+            <div class="command-card" onclick="doCopy('.كوكيز'); addPoints('كوكيز')"><strong>كوكيز</strong><span> تلعب 1v1، عليك تفخيخ 3 كوكيزات في خاص البوت <span class="note-text">(آخر من يخسر قلوبه يفوز)</span></span></div>
+            <div class="command-card" onclick="doCopy('.مسدس'); addPoints('مسدس')"><strong>مسدس</strong><span> كل لاعب معاه مسدسه الخاص فيه 6 خانات وطلقة واحدة <span class="note-text">(آخر واحد = الفائز)</span></span></div>
+            <div class="command-card" onclick="doCopy('.مشاركة'); addPoints('مشاركة')"><strong>مشاركة</strong><span> مشاركة الاشخاص في مسابقات للبوت مع رقم خاص <span class="note-text">(يمكنك رؤية المشاركين عبر .مشاركة عرض)</span></span></div>
+            <div class="command-card" onclick="doCopy('.مقصلة'); addPoints('مقصلة')"><strong>مقصلة</strong><span> يوجد كلمة مخفية عليك تخمينها.</span></div>
+            <div class="command-card" onclick="doCopy('.منقالها'); addPoints('منقالها')"><strong>منقالها</strong><span> عليك تخمين من قال الجملة الشهيرة.</span></div>
+            <div class="command-card" onclick="doCopy('.وصفها'); addPoints('وصفها')"><strong>وصفها</strong><span> عليك معرفة الشخصية من وصفها.</span></div>
+        </div>
+
+        <!-- فئة: ترفيه -->
+        <h3 class="category-title">🎨 ترفيه</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.ترجم')"><strong>ترجم</strong><span> يترجم لـ 7 لغات ويرسل بصمات صوتية صالحة للتشغيل.</span></div>
+            <div class="command-card" onclick="doCopy('.ترجمة')"><strong>ترجمة</strong><span> ترجمة النص الذي ارسلته الى عربي او انكليزي.</span></div>
+            <div class="command-card" onclick="doCopy('.توجيه')"><strong>توجيه</strong><span> إذاعة رسالة صافية لكل مجموعات البوت.</span></div>
+            <div class="command-card" onclick="doCopy('.زخرف')"><strong>زخرف</strong><span> يزخرف النصوص عربي وإنجليزي.</span></div>
+            <div class="command-card" onclick="doCopy('.سبام')"><strong>سبام</strong><span> هجوم السبام المدمج للنخبة.</span></div>
+            <div class="command-card" onclick="doCopy('.ستيكر')"><strong>ستيكر</strong><span> تحويل الصور والفيديوهات إلى ملصقات فخمة بحقوق داخلي.</span></div>
+            <div class="command-card" onclick="doCopy('.قص')"><strong>قص</strong><span> قص الفيديو او الصوت لعدد الثواني المطلوبة.</span></div>
+            <div class="command-card" onclick="doCopy('.لرابط')"><strong>لرابط</strong><span> تحويل الميديا لرابط مباشر بنظام دراجون.</span></div>
+            <div class="command-card" onclick="doCopy('.لصوت')"><strong>لصوت</strong><span> استخراج الصوت من الفيديو وتحويله لتسجيل صوتي.</span></div>
+            <div class="command-card" onclick="doCopy('.لصوتية')"><strong>لصوتية</strong><span> تحويل النص إلى بصمة صوتية حقيقية.</span></div>
+            <div class="command-card" onclick="doCopy('.لصورة')"><strong>لصورة</strong><span> تحويل الملصقات الثابته الى صور.</span></div>
+            <div class="command-card" onclick="doCopy('.لفيديو')"><strong>لفيديو</strong><span> تحويل ستيكر متحرك لفيديو.</span></div>
+            <div class="command-card" onclick="doCopy('.لوجو')"><strong>لوجو</strong><span> مصنع الشعارات التفاعلي.</span></div>
+        </div>
+
+        <!-- فئة: جروب -->
+        <h3 class="category-title">👥 إدارة المجموعات</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.ارفع')"><strong>ارفع</strong><span> لرفع العضو الى رتبة مشرف.</span></div>
+            <div class="command-card" onclick="doCopy('.ارفعهم')"><strong>ارفعهم</strong><span> لرفع جميع الاعضاء الى رتبة مشرف <span class="note-text">(النخبة فقط)</span></span></div>
+            <div class="command-card" onclick="doCopy('.ايديه')"><strong>ايديه</strong><span> لجلب معرف (JID) المجموعه من رابط الدخول.</span></div>
+            <div class="command-card" onclick="doCopy('.برا')"><strong>برا</strong><span> لطرد العضو الذي منشنته او رديت عليه.</span></div>
+            <div class="command-card" onclick="doCopy('.تجديد')"><strong>تجديد</strong><span> لتجديد رابط المجموعة.</span></div>
+            <div class="command-card" onclick="doCopy('.تجسس')"><strong>تجسس</strong><span> ارسال جميع بيانات المجموعه اليك في الخاص.</span></div>
+            <div class="command-card" onclick="doCopy('.تعديل')"><strong>تعديل</strong><span> لتعديل اسم او وصف او صورة المجموعة.</span></div>
+            <div class="command-card" onclick="doCopy('.خروج')"><strong>خروج</strong><span> لجعل البوت يخرج من المجموعة من تلقاء نفسه.</span></div>
+            <div class="command-card" onclick="doCopy('.خفض')"><strong>خفض</strong><span> لخفض العضو من رتبة الاشراف.</span></div>
+            <div class="command-card" onclick="doCopy('.دخول')"><strong>دخول</strong><span> لجعل البوت يدخل الى المجموعة من رابط الدعوة الذي ارسلته.</span></div>
+            <div class="command-card" onclick="doCopy('.رابط')"><strong>رابط</strong><span> لجلب رابط دعوة المجموعة.</span></div>
+            <div class="command-card" onclick="doCopy('.شات')"><strong>شات</strong><span> لجعل الشات لاستخدام المشرفين فقط او لجميع الاعضاء <span class="note-text">(قفل او فتح الشات)</span></span></div>
+            <div class="command-card" onclick="doCopy('.معلومات')"><strong>معلومات</strong><span> يعرض عدد اعضاء المجموعة وعدد المشرفين.</span></div>
+            <div class="command-card" onclick="doCopy('.منشن')"><strong>منشن</strong><span> لارسال رساله جماعيه للمجموعة كلها.</span></div>
+        </div>
+
+        <!-- فئة: زرف -->
+        <h3 class="category-title">💣 زرف (ترول)</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.اخضاع')"><strong>اخضاع</strong><span> لجعل الشخص يقول "مياو" او يتم طرده.</span></div>
+            <div class="command-card" onclick="doCopy('.بوم')"><strong>بوم</strong><span> تفجير المجموعة بالكامل.</span></div>
+            <div class="command-card" onclick="doCopy('.زرف')"><strong>زرف</strong><span> تغيير معلومات المجموعة وزرفها.</span></div>
+            <div class="command-card" onclick="doCopy('.طرد')"><strong>طرد</strong><span> طرد جميع الأعضاء.</span></div>
+            <div class="command-card" onclick="doCopy('.فنش')"><strong>فنش</strong><span> طرد الجميع بعد عدد معين.</span></div>
+            <div class="command-card" onclick="doCopy('.نزلهم')"><strong>نزلهم</strong><span> سحب الإشراف من الجميع.</span></div>
+            <div class="command-card" onclick="doCopy('.هل')"><strong>هل</strong><span> التأكد إذا كان الشخص مزروفاً ام لا.</span></div>
+        </div>
+
+        <!-- فئة: مطور -->
+        <h3 class="category-title">👑 مطور (نخبة)</h3>
+        <div class="commands-grid">
+            <div class="command-card" onclick="doCopy('.اعدادات')"><strong>اعدادات</strong><span> لتغيير الثيم او البريفكس او تشغيل البوت وعمل اعاده تشغيل <span class="note-text">(جعل الاوامر للنخبة او للعامة)</span></span></div>
+            <div class="command-card" onclick="doCopy('.عنعبد')"><strong>عنعبد</strong><span> تنفيذ اوامر في مجموعات اخرى.</span></div>
+            <div class="command-card" onclick="doCopy('.كود')"><strong>كود</strong><span> لاضافة اوامر او حذفها او تعديلها بدون الحاجه لدخول MT Manager.</span></div>
+            <div class="command-card" onclick="doCopy('.مطور')"><strong>مطور</strong><span> لاضافة او ازالة العضو من المطورين <span class="note-text">(النخبة)</span></span></div>
+            <div class="command-card" onclick="doCopy('.حدث')"><strong>حدث</strong><span> لتحديث البوت وعرض تعديلاتك.</span></div>
+            <div class="command-card" onclick="doCopy('.مشاكل')"><strong>مشاكل</strong><span> لرؤية اذا كان البوت فيه مشاكل في الاوامر او لا.</span></div>
+        </div>
+    </div>
+</div>
+
+    <!-- نافذة ملاحظات المطور -->
+    <div id="notesModal" class="modal">
+        <button class="close-btn" onclick="closeModal('notesModal')">✖</button>
+        <div class="modal-content">
+            <h1 style="color: var(--gold); text-align: center; margin-bottom: 15px;">📘 ملاحظات المطور 𝐆𝐇𝐀𝐙𝐈</h1>
+            
+            <div class="note-section">
+                <h2 class="note-title">🧪 بخصوص خيار [nova] والحقوق</h2>
+                <p>هذا الخيار هو المسؤول عن جلب توثيق الواتس، الحقوق، والصورة الشخصية للبوت.</p>
+                <div class="alert-box">
+                    <strong>⚠️ تنبيه هام:</strong> الوضع الافتراضي لهذا الخيار هو <span class="code-inline">off</span>.<br>
+                    إذا قمت بتفعيله، فإن رسائل البوت <strong>لن تظهر</strong> إلا لمستخدمي "واتساب الأعمال".
+                </div>
+                <div class="comparison">
+                    <div class="comp-box"><h4 style="color:var(--gold)">✅ واتساب أعمال</h4><p>تظهر الرسالة كاملة مع التوثيق</p></div>
+                    <div class="comp-box"><h4 style="color:var(--accent-red)">❌ واتساب عادي</h4><p>لا تصل أي رسالة (فراغ)</p></div>
+                </div>
+            </div>
+
+            <div class="note-section">
+                <h2 class="note-title">📱 إعدادات Termux قبل التشغيل</h2>
+                <ul class="step-list">
+                    <li>ادخل مجلد <span class="code-inline">/sdcard/Pictures</span></li>
+                    <li>أنشئ مجلد باسم <span class="code-inline">what</span></li>
+                    <li>ضع صورتك بصيغة <span class="code-inline">.jpg</span></li>
+                    <li>في ملف <span class="code-inline">main.js</span> السطر 22، عدل اسم الصورة</li>
+                    <li>أنشئ مجلد <span class="code-inline">sound</span> وضع نغمة ترحيب بصيغة <span class="code-inline">.mp3</span></li>
+                </ul>
+            </div>
+
+            <div class="note-section">
+                <h2 class="note-title">🔧 تعديلات إلزامية</h2>
+                <ul class="step-list">
+                    <li><strong>أمر السكربت:</strong> عدل رقمك في السطر 58</li>
+                    <li><strong>كلمة السر:</strong> عدلها في السطر 69</li>
+                    <li><strong>أمر التجسس:</strong> عدل رقم المطور في السطر 92</li>
+                </ul>
+            </div>
+
+            <!-- ملاحظة نظام النقاط -->
+            <div class="note-section">
+                <h2 class="note-title">🎮 نظام النقاط للألعاب</h2>
+                <div class="points-note">
+                    <p><strong>📌 تنبيه هام:</strong> الالعاب هنا بدون نظام نقاط.</p>
+                    <p>لو بدك نقاط روح <strong>ChatGPT</strong> او <strong>Gemini</strong> واعطيه الكود وقوله يضيف نظام النقاط وعدد النقاط الي تبيها.</p>
+                    <p>وروح ملف <strong>data</strong> راح تلاقي ملف اسمه <strong>rank.json</strong> ذا هو الملف الخاص بعدد النقاط.</p>
+                </div>
+            </div>
+
+            <div class="note-section future-plan">
+                <h2 class="note-title" style="color:var(--blue-glow)">🗺️ خارطة الطريق</h2>
+                <p><strong>v4.1:</strong> استقرار جميع الأوامر</p>
+                <p><strong>v4.2 ~ v4.3:</strong> إعادة نظام الصور بشكل طبيعي</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-msg">✅ تم النسخ</div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // فتح النافذة المنبثقة
+        function toggleModal(id) {
+            document.getElementById(id).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق النافذة المنبثقة
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // الأسئلة الشائعة
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const span = element.querySelector('span');
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                span.innerHTML = '➕';
+            } else {
+                answer.style.display = 'block';
+                span.innerHTML = '➖';
+            }
+        }
+
+        // دالة إضافة نقاط (للألعاب فقط)
+        function addPoints(gameName) {
+            // هذه دالة وهمية للتوضيح - سيتم استدعاؤها عند الضغط على أمر لعبة
+            // في البوت الحقيقي، ستتواصل مع ملف rank.json
+            console.log(`تم إضافة نقاط للعبة: ${gameName}`);
+            // يمكنك هنا إضافة كود التواصل مع ملف rank.json
+        }
+
+        // نسخ النص
+        function doCopy(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast-msg');
+                toast.innerText = '✅ تم نسخ: ' + text;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                const toast = document.getElementById('toast-msg');
+                toast.innerText = '✅ تم نسخ: ' + text;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            });
+        }
+
+        // إغلاق النوافذ عند الضغط خارجها
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // تشغيل الجزيئات
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 100 },
+                "color": { "value": "#D4AF37" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 2.5 },
+                "move": { "enable": true, "speed": 1.2, "direction": "top" }
+            }
+        });
+    </script>
+</body>
+</html>
